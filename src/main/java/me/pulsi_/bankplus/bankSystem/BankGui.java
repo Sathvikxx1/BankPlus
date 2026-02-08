@@ -1,5 +1,6 @@
 package me.pulsi_.bankplus.bankSystem;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.pulsi_.bankplus.BankPlus;
 import me.pulsi_.bankplus.account.BPPlayer;
@@ -16,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,11 +111,12 @@ public class BankGui {
             }
         }
 
-        p.closeInventory();
+        BankPlus.getScheduler().runAtEntity(p, task -> p.closeInventory());
+
         BPPlayer player = PlayerRegistry.get(p);
         if (player == null) player = PlayerRegistry.loadPlayer(p);
 
-        BukkitTask updating = player.getBankUpdatingTask();
+        WrappedTask updating = player.getBankUpdatingTask();
         if (updating != null) updating.cancel();
 
         Component title = this.title;
@@ -127,12 +128,13 @@ public class BankGui {
         updateBankGuiMeta(bankInventory, p);
 
         if (updateDelay >= 0)
-            player.setBankUpdatingTask(Bukkit.getScheduler().runTaskTimer(BankPlus.INSTANCE(), () -> updateBankGuiMeta(bankInventory, p), updateDelay, updateDelay));
+            player.setBankUpdatingTask(BankPlus.getScheduler().runTimer(() -> updateBankGuiMeta(bankInventory, p), updateDelay, updateDelay));
 
         player.setOpenedBank(getOriginBank());
         if (ConfigValues.isPersonalSoundEnabled()) BPUtils.playSound(ConfigValues.getPersonalSound(), p);
 
-        p.openInventory(bankInventory);
+        BankPlus.getScheduler().runAtEntity(p, task ->
+                p.openInventory(bankInventory));
     }
 
     /**

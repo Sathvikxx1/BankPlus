@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class BPBankTop {
      * Update the bank top.
      */
     public static void updateBankTop() {
-        Bukkit.getScheduler().runTaskAsynchronously(BankPlus.INSTANCE(), () -> {
+        BankPlus.getScheduler().runAsync(taskk -> {
             HashMap<String, BigDecimal> balances = BPEconomy.getAllEconomiesBankBalances();
             List<BankTopPlayer> players = new ArrayList<>();
 
@@ -68,7 +67,7 @@ public class BPBankTop {
      */
     public static void restartBankTopUpdateTask() {
         long delay = ConfigValues.getUpdateBankTopDelay();
-        BPTaskManager.setTask(BPTaskManager.BANKTOP_BROADCAST_TASK, Bukkit.getScheduler().runTaskTimer(BankPlus.INSTANCE(), BPBankTop::updateBankTop, delay, delay));
+        BPTaskManager.setTask(BPTaskManager.BANKTOP_BROADCAST_TASK, BankPlus.getScheduler().runTimer(BPBankTop::updateBankTop, delay, delay));
     }
 
     /**

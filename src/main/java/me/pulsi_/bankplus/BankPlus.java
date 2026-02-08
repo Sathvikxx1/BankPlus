@@ -1,5 +1,7 @@
 package me.pulsi_.bankplus;
 
+import com.tcoded.folialib.FoliaLib;
+import com.tcoded.folialib.impl.PlatformScheduler;
 import me.pulsi_.bankplus.interest.BPInterest;
 import me.pulsi_.bankplus.managers.BPAFK;
 import me.pulsi_.bankplus.managers.BPConfigs;
@@ -40,10 +42,38 @@ public final class BankPlus extends JavaPlugin {
 
     private int tries = 1;
 
+    private FoliaLib foliaLib;
+
+    public static PlatformScheduler getScheduler() {
+        return INSTANCE.foliaLib.getScheduler();
+    }
+
+    public static BankPlus INSTANCE() {
+        return INSTANCE;
+    }
+
+    public static String getServerVersion() {
+        return serverVersion;
+    }
+
+    public static boolean isAlphaVersion() {
+        return INSTANCE.getDescription().getVersion().toLowerCase().contains("-alpha");
+    }
+
+    @Override
+    public void onDisable() {
+        bpData.shutdownPlugin();
+    }
+
+    public Economy getVaultEconomy() {
+        return vaultEconomy;
+    }
+
     @Override
     public void onEnable() {
         INSTANCE = this;
 
+        foliaLib = new FoliaLib(this);
         PluginManager plManager = Bukkit.getPluginManager();
         if (plManager.getPlugin("Vault") == null) {
             BPLogger.Console.log("");
@@ -102,30 +132,6 @@ public final class BankPlus extends JavaPlugin {
             BPLogger.Console.info("Hooked into CMI!");
             isCmiHooked = true;
         }
-
-        if (ConfigValues.isUpdateCheckerEnabled())
-            Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> isUpdated = isPluginUpdated(), 0, (8 * 1200) * 60 /*8 hours*/);
-    }
-
-    @Override
-    public void onDisable() {
-        bpData.shutdownPlugin();
-    }
-
-    public static BankPlus INSTANCE() {
-        return INSTANCE;
-    }
-
-    public static String getServerVersion() {
-        return serverVersion;
-    }
-
-    public static boolean isAlphaVersion() {
-        return INSTANCE.getDescription().getVersion().toLowerCase().contains("-alpha");
-    }
-
-    public Economy getVaultEconomy() {
-        return vaultEconomy;
     }
 
     public Permission getPermissions() {

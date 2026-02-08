@@ -78,7 +78,7 @@ public class ViewCmd extends BPCommand {
         return new BPCmdExecution() {
             @Override
             public void execute() {
-                Bukkit.getScheduler().runTaskAsynchronously(BankPlus.INSTANCE(), () -> {
+                BankPlus.getScheduler().runAsync(task123 -> {
                     // Do that on the cmd execution because to check offline
                     // permissions we need to run it asynchronously.
                     List<Bank> banks = new ArrayList<>();

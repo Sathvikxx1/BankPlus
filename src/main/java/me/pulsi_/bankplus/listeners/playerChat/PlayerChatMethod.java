@@ -1,5 +1,6 @@
 package me.pulsi_.bankplus.listeners.playerChat;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import me.pulsi_.bankplus.BankPlus;
 import me.pulsi_.bankplus.account.BPPlayer;
@@ -12,7 +13,6 @@ import me.pulsi_.bankplus.values.ConfigValues;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.math.BigDecimal;
 
@@ -68,17 +68,18 @@ public class PlayerChatMethod {
     }
 
     public static void reopenBank(BPPlayer bpPlayer, BankGui openedBankGui) {
-        Bukkit.getScheduler().runTask(BankPlus.INSTANCE(), () -> {
-            BukkitTask task = bpPlayer.getClosingTask();
+        BankPlus.getScheduler().runNextTick(task1 -> {
+            WrappedTask task = bpPlayer.getClosingTask();
             if (task != null) task.cancel();
 
             removeFromTyping(bpPlayer);
-            if (ConfigValues.isReopeningBankAfterChat() && ConfigValues.isGuiModuleEnabled()) openedBankGui.openBankGui(bpPlayer.getPlayer(), true);
+            if (ConfigValues.isReopeningBankAfterChat() && ConfigValues.isGuiModuleEnabled())
+                openedBankGui.openBankGui(bpPlayer.getPlayer(), true);
         });
     }
 
     private static void executeExitCommands(Player p) {
-        Bukkit.getScheduler().runTask(BankPlus.INSTANCE(), () -> {
+        BankPlus.getScheduler().runNextTick(task1 -> {
             for (String cmd : ConfigValues.getExitCommands()) {
                 if (cmd.startsWith("[CONSOLE]")) {
                     String s = cmd.replace("[CONSOLE] ", "").replace("%player%", p.getName());

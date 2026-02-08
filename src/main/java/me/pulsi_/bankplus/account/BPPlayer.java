@@ -1,15 +1,15 @@
 package me.pulsi_.bankplus.account;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import me.pulsi_.bankplus.bankSystem.Bank;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 
 public class BPPlayer {
 
     private final Player player;
 
     private Bank openedBank;
-    private BukkitTask bankUpdatingTask, closingTask;
+    private WrappedTask bankUpdatingTask, closingTask;
 
     // Values to check if the player is doing a deposit or withdraw through chat.
     private boolean depositing, withdrawing;
@@ -26,12 +26,12 @@ public class BPPlayer {
         return openedBank;
     }
 
-    public BukkitTask getBankUpdatingTask() {
+    public WrappedTask getBankUpdatingTask() {
         return bankUpdatingTask;
     }
 
-    public BukkitTask getClosingTask() {
-        return closingTask;
+    public void setBankUpdatingTask(WrappedTask bankUpdatingTask) {
+        this.bankUpdatingTask = bankUpdatingTask;
     }
 
     public boolean isDepositing() {
@@ -46,11 +46,11 @@ public class BPPlayer {
         this.openedBank = openedBank;
     }
 
-    public void setBankUpdatingTask(BukkitTask bankUpdatingTask) {
-        this.bankUpdatingTask = bankUpdatingTask;
+    public WrappedTask getClosingTask() {
+        return closingTask;
     }
 
-    public void setClosingTask(BukkitTask closingTask) {
+    public void setClosingTask(WrappedTask closingTask) {
         this.closingTask = closingTask;
     }
 

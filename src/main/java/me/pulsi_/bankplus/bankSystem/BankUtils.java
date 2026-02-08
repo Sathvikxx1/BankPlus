@@ -530,7 +530,9 @@ public class BankUtils {
 
                 for (int i = 1; i < parts.length; i++) {
                     String cmd = parts[i].replace("%player%", p.getName());
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+                    BankPlus.getScheduler().runNextTick(task -> {
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+                    });
                 }
             }
         }

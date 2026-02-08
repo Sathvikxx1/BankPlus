@@ -122,6 +122,6 @@ public class ResetAllCmd extends BPCommand {
             }
         }
 
-        Bukkit.getScheduler().runTaskLater(BankPlus.INSTANCE(), () -> resetAll(copy, mode), 1);
+        BankPlus.getScheduler().runLater(() -> resetAll(copy, mode), 1);
     }
 }

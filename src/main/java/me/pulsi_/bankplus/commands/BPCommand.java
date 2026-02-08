@@ -154,7 +154,7 @@ public abstract class BPCommand {
         execution.execute();
         if (cooldown > 0 && !(s instanceof ConsoleCommandSender)) {
             cooldowns.put(s.getName(), System.currentTimeMillis() + (cooldown * 1000L));
-            Bukkit.getScheduler().runTaskLater(BankPlus.INSTANCE(), () -> cooldowns.remove(s.getName()), cooldown * 20L);
+            BankPlus.getScheduler().runLater(() -> cooldowns.remove(s.getName()), cooldown * 20L);
         }
     }
 

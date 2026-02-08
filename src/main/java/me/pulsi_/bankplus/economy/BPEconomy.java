@@ -11,7 +11,6 @@ import me.pulsi_.bankplus.events.BPPreTransactionEvent;
 import me.pulsi_.bankplus.listeners.playerChat.PlayerChatMethod;
 import me.pulsi_.bankplus.sql.BPSQL;
 import me.pulsi_.bankplus.utils.BPUtils;
-import me.pulsi_.bankplus.utils.texts.BPFormatter;
 import me.pulsi_.bankplus.utils.texts.BPMessages;
 import me.pulsi_.bankplus.values.ConfigValues;
 import me.pulsi_.bankplus.values.MessageValues;
@@ -19,7 +18,6 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
@@ -600,14 +598,14 @@ public class BPEconomy {
         if (MessageValues.isTitleCustomAmountEnabled()) BPUtils.sendTitle(MessageValues.getCustomDepositTitle(), p);
 
         BPMessages.sendIdentifier(p, "Chat-Deposit");
-        p.closeInventory();
+        BankPlus.getScheduler().runAtEntity(p, task -> p.closeInventory());
 
         BPPlayer bpPlayer = PlayerRegistry.get(p);
         Bank bank = getOriginBank();
         bpPlayer.setOpenedBank(bank);
         bpPlayer.setDepositing(true);
 
-        bpPlayer.setClosingTask(Bukkit.getScheduler().runTaskLater(BankPlus.INSTANCE(), () -> {
+        bpPlayer.setClosingTask(BankPlus.getScheduler().runLater(() -> {
             PlayerChatMethod.reopenBank(bpPlayer, bank.getBankGui());
             BPMessages.sendIdentifier(p, "Chat-Time-Expired");
         }, ConfigValues.getChatExitTime() * 20L));
@@ -622,14 +620,14 @@ public class BPEconomy {
         if (MessageValues.isTitleCustomAmountEnabled()) BPUtils.sendTitle(MessageValues.getCustomWithdrawTitle(), p);
 
         BPMessages.sendIdentifier(p, "Chat-Withdraw");
-        p.closeInventory();
+        BankPlus.getScheduler().runAtEntity(p, task -> p.closeInventory());
 
         BPPlayer bpPlayer = PlayerRegistry.get(p);
         Bank bank = getOriginBank();
         bpPlayer.setOpenedBank(bank);
         bpPlayer.setWithdrawing(true);
 
-        bpPlayer.setClosingTask(Bukkit.getScheduler().runTaskLater(BankPlus.INSTANCE(), () -> {
+        bpPlayer.setClosingTask(BankPlus.getScheduler().runLater(() -> {
             PlayerChatMethod.reopenBank(bpPlayer, bank.getBankGui());
             BPMessages.sendIdentifier(p, "Chat-Time-Expired");
         }, ConfigValues.getChatExitTime() * 20L));

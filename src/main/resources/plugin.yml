@@ -12,6 +12,9 @@ softdepend:
   - EconomyPlus
   - CMI
 load: POSTWORLD
+
+folia-supported: true
+
 commands:
   bankplus:
     aliases: [bankp, bank, bp]

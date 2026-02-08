@@ -107,6 +107,6 @@ public class AddAllCmd extends BPCommand {
             economy.addBankBalance(copy.removeFirst(), amount);
         }
 
-        Bukkit.getScheduler().runTaskLater(BankPlus.INSTANCE(), () -> addAll(copy, amount, economy), 1);
+        BankPlus.getScheduler().runLater(() -> addAll(copy, amount, economy), 1);
     }
 }

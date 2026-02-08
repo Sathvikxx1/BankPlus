@@ -1,5 +1,6 @@
 package me.pulsi_.bankplus.listeners;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import me.pulsi_.bankplus.BankPlus;
 import me.pulsi_.bankplus.account.BPPlayer;
 import me.pulsi_.bankplus.account.PlayerRegistry;
@@ -16,7 +17,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.math.BigDecimal;
 
@@ -26,7 +26,7 @@ public class PlayerServerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
 
-        Bukkit.getScheduler().runTaskAsynchronously(BankPlus.INSTANCE(), () -> {
+        BankPlus.getScheduler().runAsync((task) -> {
             boolean wasRegistered = BPSQL.isRegistered(p, ConfigValues.getMainGuiName());
             if (!wasRegistered && ConfigValues.isNotifyingNewPlayer())
                     BPLogger.Console.info("Successfully registered " + p.getName() + "!");
@@ -51,7 +51,7 @@ public class PlayerServerListener implements Listener {
             BigDecimal finalAmount = amount;
             String mess = BPMessages.applyMessagesPrefix(ConfigValues.getOfflineInterestMessage());
             if (finalAmount.compareTo(BigDecimal.ZERO) > 0)
-                Bukkit.getScheduler().runTaskLater(BankPlus.INSTANCE(), () ->
+                BankPlus.getScheduler().runLater(() ->
                                 BPMessages.sendMessage(p, mess, BPUtils.placeValues(finalAmount)),
                         ConfigValues.getNotifyOfflineInterestDelay() * 20L);
         });
@@ -63,7 +63,7 @@ public class PlayerServerListener implements Listener {
 
         BPPlayer player = PlayerRegistry.get(p);
         if (player != null) {
-            BukkitTask updating = player.getBankUpdatingTask();
+            WrappedTask updating = player.getBankUpdatingTask();
             if (updating != null) updating.cancel();
 
             player.setDepositing(false);

@@ -170,7 +170,7 @@ public class BPLoanRegistry {
 
         // Check that because not every loan is brand new, there could be loans that have a different time left.
         int delay = loan.getTimeLeft() <= 0 ? ConfigValues.getLoanDelay() : BPUtils.millisecondsInTicks(loan.getTimeLeft());
-        loan.setTask(Bukkit.getScheduler().runTaskLater(BankPlus.INSTANCE(), () -> advanceReturningTask(loan), delay));
+        loan.setTask(BankPlus.getScheduler().runLater(() -> advanceReturningTask(loan), delay));
     }
 
     /**
@@ -226,7 +226,8 @@ public class BPLoanRegistry {
 
         // Was the loan at his final instalment?
         if (loan.getInstalmentsPoint() >= instalments) loans.remove(loan);
-        else loan.setTask(Bukkit.getScheduler().runTaskLater(BankPlus.INSTANCE(), () -> advanceReturningTask(loan), ConfigValues.getLoanDelay()));
+        else
+            loan.setTask(BankPlus.getScheduler().runLater(() -> advanceReturningTask(loan), ConfigValues.getLoanDelay()));
     }
 
     public static class LoanRequest {

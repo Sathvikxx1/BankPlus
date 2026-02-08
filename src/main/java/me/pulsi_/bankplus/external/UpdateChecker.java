@@ -4,7 +4,6 @@ import me.pulsi_.bankplus.BankPlus;
 import me.pulsi_.bankplus.utils.texts.BPChat;
 import me.pulsi_.bankplus.values.ConfigValues;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,7 +28,7 @@ public class UpdateChecker implements Listener {
         else message = null;
 
         if (message != null)
-            Bukkit.getScheduler().runTaskLater(BankPlus.INSTANCE(), () -> {
+            BankPlus.getScheduler().runLater(() -> {
                 p.sendMessage(" ");
                 p.sendMessage(MiniMessage.miniMessage().deserialize(message));
                 p.sendMessage(" ");

@@ -4,14 +4,11 @@ import me.pulsi_.bankplus.BankPlus;
 import me.pulsi_.bankplus.account.PlayerRegistry;
 import me.pulsi_.bankplus.managers.BPTaskManager;
 import me.pulsi_.bankplus.sql.BPSQL;
-import me.pulsi_.bankplus.utils.texts.BPFormatter;
 import me.pulsi_.bankplus.values.ConfigValues;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -49,7 +46,7 @@ public class EconomyUtils {
             loadedUUIDs.addAll(economy.getLoadedPlayers());
 
         if (async) {
-            Bukkit.getScheduler().runTaskAsynchronously(BankPlus.INSTANCE(), () -> {
+            BankPlus.getScheduler().runAsync(task -> {
                 for (UUID uuid : loadedUUIDs) {
                     OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
                     savePlayer(p, !p.isOnline());
@@ -72,6 +69,6 @@ public class EconomyUtils {
         if (delay <= 0) return;
 
         long minutes = delay * 1200L;
-        BPTaskManager.setTask(BPTaskManager.MONEY_SAVING_TASK, Bukkit.getScheduler().runTaskTimer(BankPlus.INSTANCE(), () -> saveEveryone(true), minutes, minutes));
+        BPTaskManager.setTask(BPTaskManager.MONEY_SAVING_TASK, BankPlus.getScheduler().runTimer(() -> saveEveryone(true), minutes, minutes));
     }
 }

@@ -42,7 +42,7 @@ public class BPAFK {
             }
         }
 
-        Bukkit.getScheduler().runTaskLater(plugin, this::startCountdown, 20L);
+        BankPlus.getScheduler().runLater(this::startCountdown, 20L);
     }
 
     public Map<UUID, Long> getAfkCooldown() {
