@@ -86,7 +86,7 @@ public class BPInterest {
     private void loopInterest() {
         if (!isInterestActive()) return;
         if (getInterestCooldownMillis() <= 0) giveInterest();
-        BPTaskManager.setTask(BPTaskManager.INTEREST_TASK, BankPlus.getScheduler().runTimer(this::loopInterest, 10L, 10L));
+        BPTaskManager.setTask(BPTaskManager.INTEREST_TASK, BankPlus.getScheduler().runLater(this::loopInterest, 10L));
     }
 
     public abstract static class InterestMethod {
